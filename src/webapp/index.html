@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BR Concepts</title>
+
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="../node_modules/sweetalert/dist/sweetalert.css">
+    <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../node_modules/ng-table/bundles/ng-table.css">
+
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="../node_modules/angular/angular.js"></script>
+
+    <script src="../node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+    <script src="../node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="../node_modules/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../node_modules/ng-table/bundles/ng-table.js"></script>
+
+
+    <script src="js/controllers/headerNavBarhomeCtrl.js"></script>
+    <script src="js/modules/courseModule.js"></script>
+    <script src="js/directives/myMenu.js"></script>
+    <script src="js/app.js"></script>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body ng-app="myApp">
+
+<nav class="navbar navbar-default panel_heading_background ng-scope" role="navigation" ng-controller="headerNavBarhomeCtrl">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="index.html" title="HOME"> BR Concepts</a>
+    </div>
+
+    <div class="collapse navbar-collapse in" collapse="isCollapsed" style="height: auto;">
+        <div class="nav navbar-nav navbar-right navbar_background_clr">
+            <li class="header_li_border">
+                <a class="welcome panel_title_color ng-binding">
+                    <i class="fa fa-calendar bigger-110"></i>
+                    {{currentDate()}}
+                </a>
+            </li>
+            <li class="dropdown header_li_border" dropdown="" on-toggle="toggled(open)">
+                <a href="#" class="dropdown-toggle welcome panel_title_color ng-binding" dropdown-toggle="" role="button" aria-expanded="false" aria-haspopup="true">
+                    Welcome
+                    <b href="" ui-sref-active="active" class="handCursor ng-binding">
+                        {{userName()}}
+                    </b>
+                    <span class="caret navebar_caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a ui-sref="userProfile" class="ng-binding" href="#/userProfile">
+                            Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a ui-sref="changepassword" class="ng-binding" href="#/changepassword">
+                            Change Password
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="header_li_border">
+                <a ng-click="logout()" class="welcome panel_title_color ng-binding" ui-sref-active="active" href="login?logout">
+                    <i class="fa fa-power-off panel_title_color"></i>
+                    Logout
+                </a>
+            </li>
+
+        </div>
+    </div>
+
+</nav>
+
+<div id="wrapper" class="toggled">
+
+    <!-- Sidebar -->
+
+    <div  id="sidebar-wrapper" class="nav-side-menu" >
+
+
+        <div class="menu-list">
+
+            <ul id="menu-content" class="menu-content ">
+                <li>
+                    <a ui-sref="home"><i class="fa fa-home fa-lg"></i>Home</a>
+                </li>
+
+                <li data-toggle="collapse" data-target="#master" class="collapsed">
+                    <a><i class="fa fa-book fa-lg"></i> Master <span class="arrow"></span></a>
+                </li>
+                <ul class="sub-menu collapse" id="master">
+                    <my-menu label="Courses" class="nav navbar-nav  col-md-12"></my-menu>
+                    <my-menu label="Agents" class="nav navbar-nav  col-md-12"></my-menu>
+                    <my-menu label="Amenities" class="nav navbar-nav  col-md-12"></my-menu>
+                    <my-menu label="Roles" class="nav navbar-nav col-md-12"></my-menu>
+                    <my-menu label="Users" class="nav navbar-nav col-md-12"></my-menu>
+                    <my-menu label="Staff" class="nav navbar-nav col-md-12"></my-menu>
+                </ul>
+                <li data-toggle="collapse" data-target="#reports" class="collapsed">
+                    <a><i class="fa fa-book fa-lg"></i>Reports <span class="arrow"></span></a>
+                </li>
+                <ul class="sub-menu collapse" id="reports">
+                    <my-menu url="serviceReports" label="ServiceReports" class="nav navbar-nav  col-md-12"></my-menu>
+                    <my-menu label="DueReport" class="nav navbar-nav  col-md-12"></my-menu>
+                    <my-menu label="Payments" class="nav navbar-nav  col-md-12"></my-menu>
+                    <my-menu label="OfficeExpenses" class="nav navbar-nav col-md-12"></my-menu>
+                    <my-menu label="ExpensesIncomesReports" class="nav navbar-nav col-md-12"></my-menu>
+                    <my-menu label="CashBalances" class="nav navbar-nav col-md-12"></my-menu>
+                </ul>
+                <li data-toggle="collapse" data-target="#checklist" class="collapsed">
+                    <a><i class="fa fa-book fa-lg"></i> Check List <span class="arrow"></span></a>
+                </li>
+                <ul class="sub-menu collapse" id="checklist">
+                    <my-menu url="pendingreports" label="PendingReports" class="nav navbar-nav  col-md-12"></my-menu>
+                </ul>
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-user fa-lg"></i> Profile
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <i class="fa fa-users fa-lg"></i> Users
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <a href="#menu-toggle" class="btn btn-default" id="menu-toggle" style="position: relative;top: 65px;z-index: 2;"><i class="fa fa-bars fa-2x toggle-btn"></i> </a>
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <breadscrumb class="ng-scope">
+                        <div class="breadcrumbs printhide" ng-click="breadscrumb_print_fn()">
+                            <div class="view-container">
+                                <div class="view-frame">
+                                    <ui-view>Select from Menu</ui-view>
+                                </div>
+                            </div>
+                        </div>
+                    </breadscrumb></div>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <script>
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+    </script>
+    <script src="js/directives/menu.js"></script>
+
+
+</body>
+</html>

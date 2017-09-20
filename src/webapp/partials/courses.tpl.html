@@ -1,1 +1,158 @@
-{{headline}}
+<legend>{{headline}}</legend>
+
+<div class="toolbar-button-div pull-right">
+    <button type="button" class="btn btn-sm btn-primary" ng-click="handleClickAddCourse()">
+        <span class="glyphicon glyphicon-plus"></span> Add Course
+    </button>
+</div>
+<br/>
+<br/>
+
+<table class="table table-bordered table-condensed table-hover">
+    <tr>
+        <th>Course Name</th>
+        <th>Course Instructor</th>
+        <th>Course Description</th>
+        <th>Active/InActive</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    <tr ng-repeat="course in courses">
+        <td class="clickable-item col-md-4" >{{ course.name }}</td>
+        <td class="clickable-item col-md-4" >{{ course.instructor }}</td>
+        <td class="clickable-item col-md-3" >{{ course.description }}</td>
+        <td class="clickable-item col-md-3"><span ng-if="course.active === false ">InActive</span><span ng-if="course.active === true">Active</span></td>
+        <td class="col-md-2">
+            <md-button>
+                <md-icon type="button" class="btn" ng-click="handleClickUpdateCourse(course._id)">
+                    <span class="glyphicon glyphicon-pencil"></span></md-icon>
+            </md-button>
+        </td>
+        <td class="col-md-2">
+            <md-button>
+                <md-icon type="button" class="btn" ng-click="deleteCourseById(course._id)">
+                    <span class="glyphicon glyphicon-remove"></span></md-icon>
+            </md-button>
+        </td>
+    </tr>
+    <tr ng-if="!courses || courses.length === 0">
+        <td colspan="4">No Courses exist.  Please add some.</td>
+    </tr>
+</table>
+
+<!-- modal popup for adding Course -->
+
+<script type="text/ng-template" id="add-Course-modal.html">
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-sm-11">
+                <h3 class="modal-title">Add Course</h3>
+            </div>
+            <div class="col-sm-1">
+                <md-button>
+                    <md-icon type="button" class="btn-sm" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </md-icon>
+                </md-button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <form name="courseForm" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Course Name <span class="data-required">*</span> :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="courseInput" class="form-control" ng-model="course.name" placeholder="Course Name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Course Instructor <span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="text" id="courseInstructor" class="form-control" ng-model="course.instructor" placeholder="Instructor Name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Course Description :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="courseDescription" class="form-control" ng-model="course.description" placeholder="Course Description">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label checkbox" for="activeInactive">Active</label>
+                <div class="col-sm-1">
+                    <input type="checkbox" class="form-control" ng-model="course.active">
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="addCourse()" ng-disabled="!isInputValid()">Add</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+<!-- modal popup for Updating Course -->
+
+<script type="text/ng-template" id="update-course-modal.html">
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-sm-11">
+                <h3 class="modal-title">Update Course</h3>
+            </div>
+            <div class="col-sm-1">
+                <md-button>
+                    <md-icon type="button" class="btn-sm" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </md-icon>
+                </md-button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <form name="courseUpdateForm" class="form-horizontal" role="form">
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Course Name <span class="data-required">*</span> :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="courseNameUpdate" class="form-control" ng-model="course.name" placeholder="Course Name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Course Instructor <span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="text" id="courseInstructorUpdate" class="form-control" ng-model="course.instructor" placeholder="Instructor Name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Course Description :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="courseDescriptionUpdate" class="form-control" ng-model="course.description" placeholder="Course Description">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label checkbox" for="activeInactive">Active</label>
+                <div class="col-sm-1">
+                    <input type="checkbox" id="activeInactive" class="form-control" ng-model="course.active">
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="updateCourse()" ng-disabled="!isInputValid()">Update</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>

@@ -16,7 +16,7 @@ myApp.config(['$stateProvider','$urlRouterProvider',
                 templateUrl: 'partials/home.html'
             })
             .state('courses',{
-                url:'/courses',
+                url:'/courses.html',
                 templateUrl: 'partials/courses.tpl.html',
                 controller: 'CourseController'
             });

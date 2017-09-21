@@ -37,8 +37,8 @@ app.use(express.static(path.join(__dirname+'/../../webapp')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use('/', index);
-app.use('/courses', courses);
+app.use('/api', index);
+app.use('/api/courses', courses);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

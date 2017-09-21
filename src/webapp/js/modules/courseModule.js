@@ -108,7 +108,7 @@ angular.module('myApp.courseModule',['ngResource'])
         };
     })
     .factory('courseManager', ['$resource', function($resource){
-        return $resource('/courses/:id', null, {
+        return $resource('/api/courses/:id', null, {
             'update': { method:'PUT' }
         });
     }]);

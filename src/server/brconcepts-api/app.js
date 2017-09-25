@@ -8,11 +8,14 @@ var morgan = require('morgan');
 var mongoose = require('mongoose');
 var passport = require('passport');
 
+var app = express();
+
 var api = require('./routes/api');
 var index = require('./routes/index');
 var courses = require('./routes/courses');
+var staffs = require('./routes/staffs');
+var students = require('./routes/students')
 
-var app = express();
 
 // Use native Node promises
 mongoose.Promise = global.Promise;
@@ -51,10 +54,12 @@ app.get('/', function(req, res) {
     res.send('Page under construction.');
 });
 
-app.use('/api/users', api);
 
 app.use('/api', index);
+app.use('/api/users', api);
 app.use('/api/courses', courses);
+app.use('/api/staffs', staffs);
+app.use('/api/students', students);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

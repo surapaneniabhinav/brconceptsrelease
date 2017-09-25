@@ -6,7 +6,8 @@ var myApp = angular.module('myApp',[
     'myApp.loginModal',
     'myApp.myMenu',
     'myApp.header',
-    'myApp.courseModule'
+    'myApp.courseModule',
+    'myApp.studentModule'
 ])
 
 myApp.config(['$stateProvider','$urlRouterProvider',
@@ -20,13 +21,21 @@ myApp.config(['$stateProvider','$urlRouterProvider',
               }
             })
             .state('courses',{
-                url:'/courses.html',
-                templateUrl: 'partials/courses.tpl.html',
-                controller: 'CourseController',
-                    data: {
+            url:'/courses.html',
+            templateUrl: 'partials/courses.tpl.html',
+            controller: 'CourseController',
+            data: {
                 requireLogin: true
-              }
-            });
+            }
+            })
+            .state('students',{
+                url:'/students.html',
+                templateUrl: 'partials/students.tpl.html',
+                controller: 'StudentsController',
+                data: {
+                    requireLogin: true
+                }
+            })
 
         $urlRouterProvider.otherwise( '/');
 }]);

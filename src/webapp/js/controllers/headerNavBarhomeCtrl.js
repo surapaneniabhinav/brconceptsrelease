@@ -5,7 +5,7 @@ angular.module('myApp.header', ['ngTable','ui.bootstrap'])
     //
     // ============================= List All ===================================
     //
-    .controller('headerNavBarhomeCtrl', function($scope) {
+    .controller('headerNavBarhomeCtrl', function($scope,$state) {
         $scope.branchOffice = {};
         $scope.user = {};
         $scope.currentDate = function(){
@@ -24,6 +24,19 @@ angular.module('myApp.header', ['ngTable','ui.bootstrap'])
             return today;
         };
 
+        $scope.logout = function () {
+            swal({
+                title: "Are you sure?",
+                text: "Are you sure you want to Log Out",
+                type: "warning",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Yes, Log Out!",
+                confirmButtonColor: "#ec6c62"},function() {
+                $state.go('home');
+                location.reload();
+            })
+            }
 
         /*$scope.userName = function() {
             $scope.user= userManager.getUser();

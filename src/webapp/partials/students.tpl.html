@@ -1,0 +1,204 @@
+<legend>{{headline}}</legend>
+
+<div class="toolbar-button-div pull-right">
+    <button type="button" class="btn btn-sm btn-primary" ng-click="handleClickAddStudent()">
+        <span class="glyphicon glyphicon-plus"></span> Add student
+    </button>
+</div>
+<br/>
+<br/>
+
+<table class="table table-bordered table-condensed table-hover">
+    <tr>
+        <th>Student Name</th>
+        <th>Course</th>
+        <th>Registration Date</th>
+        <th>Email Id</th>
+        <th>Mobile Number</th>
+        <th>Amount Paid</th>
+        <th>Total Amount</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    <tr ng-repeat="student in students">
+        <td class="clickable-item col-md-3" >{{ student.name }}</td>
+        <td class="clickable-item col-md-1" >{{ student.course }}</td>
+        <td class="clickable-item col-md-1" >{{ student.registrationdate | date }}</td>
+        <td class="clickable-item col-md-2" >{{ student.email }}</td>
+        <td class="clickable-item col-md-2" >{{ student.mobilenumber }}</td>
+        <td class="clickable-item col-md-1" >{{ student.amount }}</td>
+        <td class="clickable-item col-md-1"><span ng-if="student.amountpaid === false ">Not Paid</span><span ng-if="student.amountpaid === true ">Paid</span></td>
+        <td class="col-md-2">
+            <md-button>
+                <md-icon type="button" class="btn" ng-click="handleClickUpdateStudent(student._id)">
+                    <span class="glyphicon glyphicon-pencil"></span></md-icon>
+            </md-button>
+        </td>
+        <td class="col-md-2">
+            <md-button>
+                <md-icon type="button" class="btn" ng-click="deleteStudentById(student._id)">
+                    <span class="glyphicon glyphicon-remove"></span></md-icon>
+            </md-button>
+        </td>
+    </tr>
+    <tr ng-if="!students || students.length === 0">
+        <td colspan="4">No students exist.  Please add some.</td>
+    </tr>
+</table>
+
+<!-- modal popup for adding student -->
+
+<script type="text/ng-template" id="add-Student-modal.html">
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-sm-11">
+                <h3 class="modal-title">Add student</h3>
+            </div>
+            <div class="col-sm-1">
+                <md-button>
+                    <md-icon type="button" class="btn-sm" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </md-icon>
+                </md-button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <form name="studentForm" class="form-horizontal" role="form" autocomplete="off" unsaved-warning-form>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Student Name <span class="data-required">*</span> :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="studentInput" class="form-control" ng-model="student.name" placeholder="student Name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Course <span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="text" id="studentCourse" class="form-control" ng-model="student.course" placeholder="Course Name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Registration Date<span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="date" id="studentRegistrationDate" class="form-control" ng-model="student.registrationdate" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Mobile Number <span class="data-required">*</span>:</label>
+                <div class="col-sm-6" ng-class="{ 'has-error': studentForm.contactInput.$invalid && studentForm.contactInput.$dirty }">
+                    <input type="text" name="contactInput" id="studentMobileNumber" class="form-control" ng-model="student.mobilenumber" ng-minlength="10" ng-maxlength="10" placeholder="Student Mobile Number" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Email:</label>
+                <div class="col-sm-6" ng-class="{ 'has-error': studentForm.studentEmail.$invalid && studentForm.studentEmail.$dirty }">
+                    <input type="email" name="studentEmail" id="studentEmail" class="form-control" ng-model="student.email" placeholder="email">
+                </div>
+            </div>
+            <div class="form-group">
+            <label class="col-sm-4 control-label">Amount Paid<span class="data-required">*</span>:</label>
+            <div class="col-sm-6">
+                <input type="number" id="studentAmount" class="form-control" ng-model="student.amount" placeholder="Amount Paid" required>
+            </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label checkbox">Total Amount Paid</label>
+                <div class="col-sm-1">
+                    <input type="checkbox" class="form-control" ng-model="student.amountpaid">
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="addStudent()" ng-disabled="!isInputValid()">Add</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+<!-- modal popup for Updating student -->
+
+<script type="text/ng-template" id="update-student-modal.html">
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-sm-11">
+                <h3 class="modal-title">Update Student</h3>
+            </div>
+            <div class="col-sm-1">
+                <md-button>
+                    <md-icon type="button" class="btn-sm" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </md-icon>
+                </md-button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <form name="studentUpdateForm" class="form-horizontal" role="form" autocomplete="off" unsaved-warning-form>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Student Name <span class="data-required">*</span> :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="studentNameUpdate" class="form-control" ng-model="student.name" placeholder="student Name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Course <span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="text" id="studentCourseUpdate" class="form-control" ng-model="student.course" placeholder="Course Name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Registration Date<span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="date" id="studentRegistrationDateUpdate" class="form-control" ng-model="student.registrationdate" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Mobile Number <span class="data-required">*</span>:</label>
+                <div class="col-sm-6" ng-class="{ 'has-error': studentUpdateForm.contactInputUpdate.$invalid && studentUpdateForm.contactInputUpdate.$dirty }">
+                    <input type="text" name="contactInputUpdate" id="studentMobileNumberUpdate" class="form-control" ng-model="student.mobilenumber" ng-minlength="10" ng-maxlength="10" placeholder="Student Mobile Number" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Email:</label>
+                <div class="col-sm-6" ng-class="{ 'has-error': studentUpdateForm.studentEmailUpdate.$invalid && studentUpdateForm.studentEmailUpdate.$dirty }">
+                    <input type="email" name="studentEmailUpdate" id="studentEmailUpdate" class="form-control" ng-model="student.email" placeholder="email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Amount Paid<span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="number" id="studentAmountUpdate" class="form-control" ng-model="student.amount" placeholder="Amount Paid" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label checkbox">Total Amount Paid</label>
+                <div class="col-sm-1">
+                    <input type="checkbox" class="form-control" ng-model="student.amountpaid">
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="updateStudent()" ng-disabled="!isInputValid()">Update</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>

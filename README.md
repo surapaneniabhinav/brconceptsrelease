@@ -3,6 +3,6 @@ A project for financial monitoring
 
 Steps:
 
-Run npm install in src folder and also in courses-api folder
+Run npm install in src folder and also in brconcepts-api folder
 
-In courses-api folder run npm start
+In brconcepts-api folder run npm start

@@ -1,6 +1,6 @@
 "use strict";
 
-angular.module('myApp.courseModule',['ngResource'])
+angular.module('myApp.courseModule',[])
     .controller("CourseController",function ($scope,$rootScope,$uibModal,courseManager) {
         $scope.headline = "Courses";
         $scope.loading = false;
@@ -8,7 +8,9 @@ angular.module('myApp.courseModule',['ngResource'])
         $scope.courses = {};
 
         $scope.init = function(){
-        $scope.courses = courseManager.query();
+            courseManager.getCourses(function (data) {
+                $scope.courses = data;
+            });
         };
         $scope.init();
 
@@ -45,7 +47,7 @@ angular.module('myApp.courseModule',['ngResource'])
                 closeOnConfirm: false,
                 confirmButtonText: "Yes, delete it!",
                 confirmButtonColor: "#ec6c62"},function() {
-                courseManager.remove({id: courseId}, function () {
+                courseManager.deleteCourse(courseId, function () {
                     swal("Great", "Course has been successfully Deleted", "success");
                     $scope.init();
                 })
@@ -60,17 +62,14 @@ angular.module('myApp.courseModule',['ngResource'])
             active: false
         };
 
-        $scope.courses = courseManager.query();
-
         $scope.addCourse = function(){
             if(!$scope.course.name  === '') return;
-            var course = new courseManager({ name: $scope.course.name, instructor: $scope.course.instructor,description: $scope.course.description, active: $scope.course.active });
-            course.$save(function(){
-                $scope.courses.push(course);
-                $rootScope.modalInstance.close();
+            var course = { name: $scope.course.name, instructor: $scope.course.instructor,description: $scope.course.description, active: $scope.course.active };
+            courseManager.addCourse(course,function (data) {
+                $rootScope.modalInstance.close(data);
                 $rootScope.$broadcast('coursesInitComplete');
                 swal("Great", "Course has been successfully added", "success");
-            });
+            })
         }
 
         $scope.cancel = function () {
@@ -85,14 +84,15 @@ angular.module('myApp.courseModule',['ngResource'])
     .controller('updateCourseModalController', function ($scope, $rootScope, courseManager, courseId) {
         $scope.course = {};
 
-        $scope.course = courseManager.get({id: courseId });
-
+        courseManager.getCourseById(courseId,function (data) {
+            $scope.course = data;
+        });
 
         $scope.updateCourse =function(){
-            courseManager.update({id: courseId}, $scope.course, function(){
-            $rootScope.modalInstance.close();
-            $rootScope.$broadcast('coursesInitComplete');
-            swal("Great", "Course has been successfully Updated", "success");
+            courseManager.updateCourse(courseId,$scope.course,function (data) {
+                $rootScope.modalInstance.close(data);
+                $rootScope.$broadcast('coursesInitComplete');
+                swal("Great", "Course has been successfully Updated", "success");
             })
         };
         $scope.cancel = function () {
@@ -107,8 +107,47 @@ angular.module('myApp.courseModule',['ngResource'])
             $scope.course= {};
         };
     })
-    .factory('courseManager', ['$resource', function($resource){
-        return $resource('/api/courses/:id', null, {
-            'update': { method:'PUT' }
-        });
-    }]);
+    .factory('courseManager',function ($http, $log) {
+        return {
+            getCourses: function (callback) {
+                $http.get('/api/courses/')
+                    .then(function (response) {
+                        callback(response.data);
+                    },function (error) {
+                        $log.debug("error retrieving courses");
+                    });
+            },
+            getCourseById: function (courseId,callback) {
+                $http.get('/api/courses/'+courseId)
+                    .then(function (response) {
+                        callback(response.data);
+                    },function (error) {
+                        $log.debug("error retrieving course");
+                    });
+            },
+            addCourse: function (course,callback) {
+                $http.post('/api/courses/',course)
+                    .then(function (response) {
+                        callback(response);
+                    },function (error) {
+                        $log.debug("error posting Course");
+                    })
+            },
+            updateCourse: function (courseId,course,callback) {
+                $http.put('/api/courses/'+courseId,course)
+                    .then(function (response) {
+                        callback(response);
+                    },function (error) {
+                        $log.debug("error updating course");
+                    })
+            },
+            deleteCourse: function (courseId,callback) {
+                $http.delete('/api/courses/'+courseId)
+                    .then(function (response) {
+                        callback(response);
+                    },function (error) {
+                        $log.debug("error deleting course");
+                    })
+            }
+        }
+    })

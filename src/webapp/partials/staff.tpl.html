@@ -1,0 +1,192 @@
+<legend>{{headline}}</legend>
+
+<div class="toolbar-button-div pull-right">
+    <button type="button" class="btn btn-sm btn-primary" ng-click="handleClickAddStaff()">
+        <span class="glyphicon glyphicon-plus"></span> Add Staff
+    </button>
+</div>
+<br/>
+<br/>
+
+<table class="table table-bordered table-condensed table-hover">
+    <tr>
+        <th>Name</th>
+        <th>Designation</th>
+        <th>Course</th>
+        <th>Address</th>
+        <th>Mobile Number</th>
+        <th>Salary</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    <tr ng-repeat="staff in staffs">
+        <td class="clickable-item col-md-2" >{{ staff.name }}</td>
+        <td class="clickable-item col-md-2" >{{ staff.designation }}</td>
+        <td class="clickable-item col-md-1" >{{ staff.course }}</td>
+        <td class="clickable-item col-md-3" >{{ staff.address }}</td>
+        <td class="clickable-item col-md-1" >{{ staff.mobilenumber }}</td>
+        <td class="clickable-item col-md-1" >{{ staff.salary | number:2 }}</td>
+        <td class="col-md-1">
+            <md-button>
+                <md-icon type="button" class="btn" ng-click="handleClickUpdateStaff(staff._id)">
+                    <span class="glyphicon glyphicon-pencil"></span></md-icon>
+            </md-button>
+        </td>
+        <td class="col-md-1">
+            <md-button>
+                <md-icon type="button" class="btn" ng-click="deleteStaffById(staff._id)">
+                    <span class="glyphicon glyphicon-remove"></span></md-icon>
+            </md-button>
+        </td>
+    </tr>
+    <tr ng-if="!staffs || staffs.length === 0">
+        <td colspan="4">No Staffs exist.  Please add some.</td>
+    </tr>
+</table>
+
+<!-- modal popup for adding Staff -->
+
+<script type="text/ng-template" id="add-staff-modal.html">
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-sm-11">
+                <h3 class="modal-title">Add Staff</h3>
+            </div>
+            <div class="col-sm-1">
+                <md-button>
+                    <md-icon type="button" class="btn-sm" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </md-icon>
+                </md-button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <form name="staffForm" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Staff Name <span class="data-required">*</span> :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="staffInput" class="form-control" ng-model="staff.name" placeholder="Staff Name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Designation <span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="text" id="staffDesignation" class="form-control" ng-model="staff.designation" placeholder="Designation" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Course :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="staffCourse" class="form-control" ng-model="staff.course" placeholder="Course">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Address :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="staffAddress" class="form-control" ng-model="staff.address" placeholder="Address">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Mobile Number <span class="data-required">*</span>:</label>
+                <div class="col-sm-6" ng-class="{ 'has-error': staffForm.contactInput.$invalid && staffForm.contactInput.$dirty }">
+                    <input type="text" name="contactInput" id="studentMobileNumber" class="form-control" ng-model="staff.mobilenumber" ng-minlength="10" ng-maxlength="10" placeholder="Mobile Number" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Salary :</label>
+                <div class="col-sm-6">
+                    <input type="number" id="staffSalary" class="form-control" ng-model="staff.salary" placeholder="Salary">
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="addStaff()" ng-disabled="!isInputValid()">Add</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+<!-- modal popup for Updating Staff -->
+
+<script type="text/ng-template" id="update-staff-modal.html">
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-sm-11">
+                <h3 class="modal-title">Update Staff</h3>
+            </div>
+            <div class="col-sm-1">
+                <md-button>
+                    <md-icon type="button" class="btn-sm" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </md-icon>
+                </md-button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <form name="staffUpdateForm" class="form-horizontal" role="form">
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Staff Name <span class="data-required">*</span> :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="staffUpdateInput" class="form-control" ng-model="staff.name" placeholder="Staff Name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Designation <span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="text" id="staffUpdateDesignation" class="form-control" ng-model="staff.designation" placeholder="Designation" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Course :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="staffUpdateCourse" class="form-control" ng-model="staff.course" placeholder="Course">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Address :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="staffUpdateAddress" class="form-control" ng-model="staff.address" placeholder="Address">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Mobile Number <span class="data-required">*</span>:</label>
+                <div class="col-sm-6" ng-class="{ 'has-error': staffUpdateForm.staffInputUpdate.$invalid && staffUpdateForm.staffInputUpdate.$dirty }">
+                    <input type="text" name="staffInputUpdate" id="studentMobileNumberUpdate" class="form-control" ng-model="staff.mobilenumber" ng-minlength="10" ng-maxlength="10" placeholder="Mobile Number" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Salary :</label>
+                <div class="col-sm-6">
+                    <input type="number" id="staffUpdateSalary" class="form-control" ng-model="staff.salary" placeholder="Salary">
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="updateStaff()" ng-disabled="!isInputValid()">Update</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>

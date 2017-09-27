@@ -7,7 +7,8 @@ var myApp = angular.module('myApp',[
     'myApp.myMenu',
     'myApp.header',
     'myApp.courseModule',
-    'myApp.studentModule'
+    'myApp.studentModule',
+    'myApp.staffModule'
 ])
 
 myApp.config(['$stateProvider','$urlRouterProvider',
@@ -27,6 +28,14 @@ myApp.config(['$stateProvider','$urlRouterProvider',
             data: {
                 requireLogin: true
             }
+            })
+            .state('staff',{
+                url:'/staff.html',
+                templateUrl: 'partials/staff.tpl.html',
+                controller: 'StaffController',
+                data: {
+                    requireLogin: true
+                }
             })
             .state('students',{
                 url:'/students.html',

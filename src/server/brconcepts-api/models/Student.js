@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+// mongoose.connect('mongodb://localhost/brconcepts');
 
 var StudentSchema = new mongoose.Schema({
     name: String,
@@ -13,4 +14,12 @@ var StudentSchema = new mongoose.Schema({
     updated_at: { type: Date, default: Date.now },
 });
 
- module.exports = mongoose.model('Student', StudentSchema);
+// var Student = mongoose.model('Student', StudentSchema);
+//
+//
+// Student.find({"registrationdate" : new Date("2017-09-06T04:00:00Z") },function (err, students) {
+//     if (err) return console.error(err);
+//     console.log(students)
+// });
+
+module.exports = mongoose.model('Student', StudentSchema);

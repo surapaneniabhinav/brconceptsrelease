@@ -3,12 +3,20 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Student = require('../models/Student.js');
 
-/* GET staffs listing. */
+/* GET students listing. */
 router.get('/', function(req, res, next) {
     Student.find(function (err,staffs) {
         if (err) return next(err);
         res.json(staffs);
     })
+});
+
+/* GET /students/id */
+router.get('/:id', function(req, res, next) {
+    Student.findById(req.params.id, function (err, post) {
+        if (err) return next(err);
+        res.json(post);
+    });
 });
 
 router.post('/', function(req, res, next) {
@@ -18,15 +26,7 @@ router.post('/', function(req, res, next) {
     });
 });
 
-/* GET /staff/id */
-router.get('/:id', function(req, res, next) {
-    Student.findById(req.params.id, function (err, post) {
-        if (err) return next(err);
-        res.json(post);
-    });
-});
-
-/* PUT /staff/:id */
+/* PUT /students/:id */
 router.put('/:id', function(req, res, next) {
     Student.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
         if (err) return next(err);

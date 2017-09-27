@@ -1,15 +1,44 @@
 "use strict";
 
-angular.module('myApp.studentModule',['ngResource'])
-    .controller("StudentsController",function ($scope,$rootScope,$uibModal,studentManager,courseManager) {
+angular.module('myApp.studentModule',['ngTable'])
+    .controller("StudentsController",function ($scope,$rootScope,NgTableParams,$uibModal,studentManager,courseManager) {
         $scope.headline = "Students";
         $scope.loading = false;
         $scope.studentsCount = 0;
         $scope.students = {};
 
-        $scope.init = function(){
-            $scope.students = studentManager.query();
+        $scope.loadAllStudents = function(){
+            studentManager.getStudents(function (data) {
+                $scope.students = data;
+            });
         };
+
+        $scope.dateChanged = function () {
+            if($scope.regDate != null) {
+                $scope.registrationDate = $scope.regDate.toISOString();
+                studentManager.getStudentsByDate($scope.registrationDate,function (data) {
+                    $scope.studentsByDate = data;
+                    $scope.totalIncome = 0;
+                    angular.forEach($scope.studentsByDate, function (student) {
+                        if (student.amount) {
+                            $scope.totalIncome = $scope.totalIncome + student.amount;
+                        }
+                        else {
+                            console.log('error')
+                        }
+                    })
+                });
+            }
+            else {
+                return
+            }
+        };
+
+        $scope.init = function () {
+            $scope.loadAllStudents();
+            $scope.dateChanged();
+        };
+
         $scope.init();
 
         $scope.$on('studentsInitComplete', function (e, value) {
@@ -45,7 +74,7 @@ angular.module('myApp.studentModule',['ngResource'])
                 closeOnConfirm: false,
                 confirmButtonText: "Yes, delete it!",
                 confirmButtonColor: "#ec6c62"},function() {
-                studentManager.remove({id: studentId}, function () {
+                studentManager.deleteStudent(studentId,function (data) {
                     swal("Great", "Student has been successfully Deleted", "success");
                     $scope.init();
                 })
@@ -64,36 +93,29 @@ angular.module('myApp.studentModule',['ngResource'])
             active: true
         };
 
-        $scope.students = studentManager.query();
-
         $scope.addStudent = function(){
             if($scope.studentForm.$dirty) {
-                $scope.studentForm.submitted = true;
                 if ($scope.studentForm.$invalid) {
                     swal("Error!", "Please fix the errors in the student form", "error");
                     return;
                 }
             }
-            else {
-                var regDate = $scope.student.registrationdate;
-                var obj = {
-                    name: $scope.student.name,
-                    course: $scope.student.course,
-                    mobilenumber: $scope.student.mobilenumber,
-                    registrationdate: regDate.toISOString(),
-                    email: $scope.student.email,
-                    amount: $scope.student.amount,
-                    amountpaid: $scope.student.amountpaid,
-                    active: $scope.student.active
-                };
-                var student = new studentManager(obj);
-                student.$save(function(){
-                    $scope.students.push(student);
-                    $rootScope.modalInstance.close();
+            var regDate = $scope.student.registrationdate;
+            var obj = {
+                name: $scope.student.name,
+                course: $scope.student.course,
+                mobilenumber: $scope.student.mobilenumber,
+                registrationdate: regDate.toISOString(),
+                email: $scope.student.email,
+                amount: $scope.student.amount,
+                amountpaid: $scope.student.amountpaid,
+                active: $scope.student.active
+            };
+            studentManager.addStudent(obj,function (data) {
+                $rootScope.modalInstance.close(data);
                     $rootScope.$broadcast('studentsInitComplete');
                     swal("Great", "Student has been successfully added", "success");
-                });
-            }
+            })
         }
 
         $scope.cancel = function () {
@@ -105,11 +127,11 @@ angular.module('myApp.studentModule',['ngResource'])
         };
 
     })
-    .controller('updateStudentModalController', function ($scope, $rootScope, studentManager, studentID) {
+    .controller('updateStudentModalController', function ($scope, $rootScope, studentManager,studentID) {
         $scope.student = {};
-
-        $scope.student = studentManager.get({id: studentID });
-
+        studentManager.getStudentById(studentID,function (data) {
+            $scope.student = data;
+        });
 
         $scope.updateStudent =function(){
             if($scope.studentUpdateForm.$dirty) {
@@ -119,13 +141,11 @@ angular.module('myApp.studentModule',['ngResource'])
                     return;
                 }
             }
-            else {
-                studentManager.update({id: studentID}, $scope.student, function () {
-                    $rootScope.modalInstance.close();
-                    $rootScope.$broadcast('studentsInitComplete');
-                    swal("Great", "Student has been successfully Updated", "success");
-                })
-            }
+            studentManager.updateStudent(studentID,$scope.student,function (data) {
+                $rootScope.modalInstance.close(data);
+                $rootScope.$broadcast('studentsInitComplete');
+                swal("Great", "Student has been successfully Updated", "success");
+            })
         };
         $scope.cancel = function () {
             $rootScope.modalInstance.dismiss('cancel');
@@ -139,8 +159,55 @@ angular.module('myApp.studentModule',['ngResource'])
             $scope.student= {};
         };
     })
-    .factory('studentManager', ['$resource', function($resource){
-        return $resource('/api/students/:id', null, {
-            'update': { method:'PUT' }
-        });
-    }]);
+    .factory('studentManager', function ($http, $log) {
+        return {
+            getStudents: function (callback) {
+                $http.get('/api/students/')
+                    .then(function (response) {
+                        callback(response.data);
+                    },function (error) {
+                        $log.debug("error retrieving students");
+                    });
+            },
+            getStudentById: function (studentId,callback) {
+                $http.get('/api/students/'+studentId)
+                    .then(function (response) {
+                        callback(response.data);
+                    },function (error) {
+                        $log.debug("error retrieving student");
+                    });
+            },
+            getStudentsByDate: function (date,callback) {
+                $http.get('/api/studentsByDate/'+date)
+                    .then(function (response) {
+                        callback(response.data);
+                    },function (error) {
+                        $log.debug("error retrieving students");
+                    });
+            },
+            addStudent: function (student,callback) {
+                $http.post('/api/students/',student)
+                    .then(function (response) {
+                        callback(response);
+                    },function (error) {
+                        $log.debug("error posting student");
+                    })
+            },
+            updateStudent: function (studentId,student,callback) {
+              $http.put('/api/students/'+studentId,student)
+                  .then(function (response) {
+                      callback(response);
+                  },function (error) {
+                      $log.debug("error updating student");
+              })
+            },
+            deleteStudent: function (studentId,callback) {
+                $http.delete('/api/students/'+studentId)
+                    .then(function (response) {
+                        callback(response);
+                    },function (error) {
+                        $log.debug("error deleting student");
+                    })
+            }
+        }
+    })

@@ -16,6 +16,7 @@ var courses = require('./routes/courses');
 var staffs = require('./routes/staffs');
 var students = require('./routes/students')
 var studentByDate = require('./routes/studentsdate')
+var payments = require('./routes/payments')
 
 
 // Use native Node promises
@@ -62,6 +63,7 @@ app.use('/api/courses', courses);
 app.use('/api/staffs', staffs);
 app.use('/api/students', students);
 app.use('/api/studentsByDate',studentByDate)
+app.use('/api/payments',payments)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

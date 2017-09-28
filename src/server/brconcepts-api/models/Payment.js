@@ -1,10 +1,9 @@
 var mongoose = require('mongoose');
 
 var PaymentSchema = new mongoose.Schema({
-    type:{
-        income: Boolean,
-        expense: Boolean
-    },
+    type: String,
+    income: Boolean,
+    expense: Boolean,
     name: String,
     amount: Number,
     paid: Boolean,

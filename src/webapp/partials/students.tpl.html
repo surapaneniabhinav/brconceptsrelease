@@ -1,34 +1,33 @@
 <div class="container">
 
 <legend>{{headline}}</legend>
+    <div class="toolbar-button-div pull-right">
+        <button type="button" class="btn btn-sm btn-primary" ng-click="handleClickAddStudent()">
+            <span class="glyphicon glyphicon-plus"></span> Add student
+        </button>
+    </div>
+    <br/>
+    <br/>
 
 <div class="bpdp-tab" ng-init="tab=1">
     <ul>
-        <li class="tab"  ng-class="{active:tab==1}">
-            <a href ng-click="tab = 1">ALL Students</a>
+        <li class="tab" ng-class="{active:tab==1}">
+            <a href ng-click="tab = 1">Students By Date</a>
         </li>
-        <li class="tab" ng-class="{active:tab==2}">
-            <a href ng-click="tab = 2">Students By Date</a>
+        <li class="tab"  ng-class="{active:tab==2}">
+            <a href ng-click="tab = 2">ALL Students</a>
         </li>
         <li class="tab" ng-class="{active:tab==3}">
             <a href ng-click="tab = 3">Students By Month</a>
         </li>
     </ul>
 
-    <div class="tab-content" ng-show="tab==1">
-
-        <div class="toolbar-button-div pull-right">
-        <button type="button" class="btn btn-sm btn-primary" ng-click="handleClickAddStudent()">
-            <span class="glyphicon glyphicon-plus"></span> Add student
-        </button>
-        </div>
-        <br/>
-        <br/>
+    <div class="tab-content" ng-show="tab==2">
 
         <table class="table table-bordered table-condensed table-hover">
         <tr>
             <th>Student Name</th>
-            <th>Course</th>
+            <th>Course/Company</th>
             <th>Registration Date</th>
             <th>Email Id</th>
             <th>Mobile Number</th>
@@ -65,7 +64,7 @@
         </table>
     </div>
 
-    <div class="tab-content" ng-show="tab==2">
+    <div class="tab-content" ng-show="tab==1">
         <br/>Registration Date: <input type="date" ng-model="regDate" ng-change="dateChanged()"><br/><br/>
 
         <table class="table table-bordered table-condensed table-hover">
@@ -75,7 +74,7 @@
         <table class="table table-bordered table-condensed table-hover">
             <tr>
                 <th>Student Name</th>
-                <th>Course</th>
+                <th>Course/Company</th>
                 <th>Registration Date</th>
                 <th>Email Id</th>
                 <th>Mobile Number</th>
@@ -145,9 +144,9 @@
             </div>
 
             <div class="form-group">
-                <label class="col-sm-4 control-label">Course <span class="data-required">*</span>:</label>
+                <label class="col-sm-4 control-label">Course/Company <span class="data-required">*</span>:</label>
                 <div class="col-sm-6">
-                    <input type="text" id="studentCourse" class="form-control" ng-model="student.course" placeholder="Course Name" required>
+                    <input type="text" id="studentCourse" class="form-control" ng-model="student.course" placeholder="Course / Company Name" required>
                 </div>
             </div>
 
@@ -224,9 +223,9 @@
             </div>
 
             <div class="form-group">
-                <label class="col-sm-4 control-label">Course <span class="data-required">*</span>:</label>
+                <label class="col-sm-4 control-label">Course/Company <span class="data-required">*</span>:</label>
                 <div class="col-sm-6">
-                    <input type="text" id="studentCourseUpdate" class="form-control" ng-model="student.course" placeholder="Course Name" required>
+                    <input type="text" id="studentCourseUpdate" class="form-control" ng-model="student.course" placeholder="Course/Company Name" required>
                 </div>
             </div>
 

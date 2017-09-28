@@ -10,7 +10,8 @@ var myApp = angular.module('myApp',[
     'myApp.studentModule',
     'myApp.staffModule',
     'myApp.registerModule',
-    'myApp.paymentsModule'
+    'myApp.paymentsModule',
+    'myApp.expensesModule'
 ])
 
 myApp.config(['$stateProvider','$urlRouterProvider',
@@ -27,6 +28,14 @@ myApp.config(['$stateProvider','$urlRouterProvider',
                 url:'/courses.html',
                 templateUrl: 'partials/courses.tpl.html',
                 controller: 'CourseController',
+                data: {
+                    requireLogin: true
+                }
+            })
+            .state('expenses',{
+                url:'/expenses.html',
+                templateUrl: 'partials/expenses.tpl.html',
+                controller: 'ExpensesController',
                 data: {
                     requireLogin: true
                 }

@@ -6,8 +6,8 @@ angular.module('myApp.paymentsModule',[])
 
         $scope.dateChanged = function () {
             if($scope.paymentDate != null) {
-                $scope.paymentDate = $scope.paymentDate.toISOString();
-                paymentsManager.getPaymentsByDate($scope.paymentDate,function (data) {
+                $scope.paymentDateChanged = $scope.paymentDate.toISOString();
+                paymentsManager.getPaymentsByDate($scope.paymentDateChanged,function (data) {
                     $scope.paymentsByDate = data;
                     $scope.totalIncome = 0;
                     $scope.totalExpense = 0;
@@ -22,6 +22,7 @@ angular.module('myApp.paymentsModule',[])
                             console.log('error')
                         }
                     })
+                    $scope.balance = $scope.totalIncome - $scope.totalExpense;
                 });
             }
             else {
@@ -156,10 +157,6 @@ angular.module('myApp.paymentsModule',[])
         $scope.isInputValid = function () {
             return ($scope.payment.name && $scope.payment.amount || '') !== '';
         };
-
-        $scope.resetCourse = function(){
-            $scope.student= {};
-        };
     })
     .factory('paymentsManager',function ($http,$log) {
         return {
@@ -210,6 +207,23 @@ angular.module('myApp.paymentsModule',[])
                     },function (error) {
                         $log.debug("error deleting payment");
                     })
+            },
+            getAllExpenses: function (callback) {
+                $http.get('/api/paymentsByType/')
+                    .then(function (response) {
+                        callback(response.data);
+                    },function (error) {
+                        $log.debug("error retrieving payments");
+                    });
+            },
+            getExpensesByDate: function (date,callback) {
+                $http.get('/api/paymentsByType/'+date)
+                    .then(function (response) {
+                        callback(response.data);
+                    },function (error) {
+                        $log.debug("error retrieving students");
+                    });
             }
+
         }
     })

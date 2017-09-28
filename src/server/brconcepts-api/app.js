@@ -18,6 +18,7 @@ var students = require('./routes/students')
 var studentByDate = require('./routes/studentsdate')
 var payments = require('./routes/payments')
 var paymentsByDate = require('./routes/paymentsdate')
+var paymentsByType = require('./routes/paymentsexpenses')
 
 
 // Use native Node promises
@@ -66,6 +67,7 @@ app.use('/api/students', students);
 app.use('/api/studentsByDate',studentByDate)
 app.use('/api/payments',payments)
 app.use('/api/paymentsByDate',paymentsByDate)
+app.use('/api/paymentsByType',paymentsByType)
 
 
 

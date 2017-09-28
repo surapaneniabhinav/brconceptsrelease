@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="modal-title">{{headline}}</h3>
+        </div>
+    </div>
+</div>
+
+<form name="registerForm">
+        <div class="form-group">
+            <label class="col-sm-12 control-label">Register Using your Email Id and Password</label>
+        </div><br/><br/>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Email <span class="data-required">*</span> :</label>
+            <div class="col-sm-4">
+                <input type="email" ng-model="email" class="form-control" />
+            </div>
+        </div><br/><br/>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Password <span class="data-required">*</span>:</label>
+            <div class="col-sm-3">
+                <input type="password" class="form-control" ng-model="password" />
+            </div>
+        </div><br/><br/>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label checkbox">Admin:</label>
+            <div class="col-sm-1">
+                <input type="checkbox" class="form-control" ng-model="admin">
+            </div>
+        </div>
+</form><br/><br/><br/>
+
+<div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-5">
+        <button class="btn btn-primary" ng-click="registerUser()">Register</button>
+    </div>
+</div>

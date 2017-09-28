@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('myApp.studentModule',['ngTable'])
-    .controller("StudentsController",function ($scope,$rootScope,NgTableParams,$uibModal,studentManager,courseManager) {
+    .controller("StudentsController",function ($scope,$rootScope,NgTableParams,$uibModal,studentManager) {
         $scope.headline = "Students";
         $scope.loading = false;
         $scope.studentsCount = 0;
@@ -81,7 +81,7 @@ angular.module('myApp.studentModule',['ngTable'])
             })
         }
     })
-    .controller("addStudentModalController",function ($scope,$rootScope,studentManager,courseManager) {
+    .controller("addStudentModalController",function ($scope,$rootScope,paymentsManager,studentManager) {
         $scope.student = {
             name: null,
             mobilenumber: null,
@@ -111,11 +111,25 @@ angular.module('myApp.studentModule',['ngTable'])
                 amountpaid: $scope.student.amountpaid,
                 active: $scope.student.active
             };
+            var payment = {
+                name: $scope.student.name + " " + $scope.student.course,
+                paymentdate: regDate.toISOString(),
+                description: "joining fee",
+                amount: $scope.student.amount,
+                paid: $scope.student.amountpaid,
+                pending: !$scope.student.amountpaid,
+                type: "income",
+                income: true,
+                expense: false
+            }
             studentManager.addStudent(obj,function (data) {
                 $rootScope.modalInstance.close(data);
                     $rootScope.$broadcast('studentsInitComplete');
                     swal("Great", "Student has been successfully added", "success");
+                paymentsManager.addPayment(payment,function (data) {
+                })
             })
+
         }
 
         $scope.cancel = function () {

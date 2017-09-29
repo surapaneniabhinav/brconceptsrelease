@@ -32,14 +32,21 @@ angular.module('myApp.loginModal', [])
 
     })
     .factory("UsersApi",function($rootScope, $http, $log){
+        var loginInfo;
         return{
         login: function (user, callback) {
             $http.post('/api/users/signin',user)
                 .then(function (response) {
                     callback(response);
+                    loginInfo = response.data;
                 }, function (error) {
                     $log.debug("error signing in");
                 });
+            },
+            getLoginInfo: function (callback) {
+                callback(loginInfo);
+                console.log(loginInfo);
             }
         }
+
     })

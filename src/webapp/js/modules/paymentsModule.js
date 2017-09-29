@@ -1,8 +1,12 @@
 "use strict";
 
 angular.module('myApp.paymentsModule',[])
-    .controller("PaymentsController",function ($scope,$rootScope,$uibModal,paymentsManager) {
+    .controller("PaymentsController",function ($scope,$rootScope,$uibModal,paymentsManager,UsersApi) {
         $scope.headline = "Payments";
+
+        UsersApi.getLoginInfo(function (data) {
+          $scope.user = data;
+        });
 
         $scope.dateChanged = function () {
             if($scope.paymentDate != null) {

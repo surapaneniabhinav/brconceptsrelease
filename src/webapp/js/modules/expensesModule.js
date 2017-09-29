@@ -1,8 +1,12 @@
 "use strict";
 
 angular.module('myApp.expensesModule',['ngTable'])
-    .controller("ExpensesController",function ($scope,$rootScope,NgTableParams,$uibModal,paymentsManager) {
+    .controller("ExpensesController",function ($scope,$rootScope,NgTableParams,$uibModal,paymentsManager,UsersApi) {
         $scope.headline = "Expenses";
+
+        UsersApi.getLoginInfo(function (data) {
+            $scope.user = data;
+        });
 
         $scope.dateChanged = function () {
             if($scope.expenseDate != null) {

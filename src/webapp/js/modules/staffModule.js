@@ -1,9 +1,12 @@
 "use strict";
 
 angular.module('myApp.staffModule',[])
-    .controller("StaffController",function ($scope,$rootScope,$uibModal,staffManager) {
+    .controller("StaffController",function ($scope,$rootScope,$uibModal,staffManager,UsersApi) {
         $scope.headline = "Staff";
 
+        UsersApi.getLoginInfo(function (data) {
+            $scope.user = data;
+        });
         $scope.init = function () {
             staffManager.getStaff(function (data) {
                 $scope.staffs = data;

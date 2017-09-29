@@ -67,7 +67,7 @@
     <div class="tab-content" ng-show="tab==1">
         <br/>Registration Date: <input type="date" ng-model="regDate" ng-change="dateChanged()"><br/><br/>
 
-        <table class="table table-bordered table-condensed table-hover">
+        <table class="table table-bordered table-condensed table-hover" ng-if="user.admin === true">
             <tr><td>Total Students :{{studentsByDate.length}}</td> <td>Total Income:{{totalIncome | number:2}}</td> </tr>
         </table>
 

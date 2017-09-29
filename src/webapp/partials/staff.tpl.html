@@ -23,16 +23,16 @@
         <td class="clickable-item col-md-2" >{{ staff.name }}</td>
         <td class="clickable-item col-md-2" >{{ staff.designation }}</td>
         <td class="clickable-item col-md-1" >{{ staff.course }}</td>
-        <td class="clickable-item col-md-3" >{{ staff.address }}</td>
-        <td class="clickable-item col-md-1" >{{ staff.mobilenumber }}</td>
-        <td class="clickable-item col-md-1" >{{ staff.salary | number:2 }}</td>
-        <td class="col-md-1">
+        <td class="clickable-item col-md-3" ng-if="user.admin === true">{{ staff.address }}</td>
+        <td class="clickable-item col-md-1" ng-if="user.admin === true">{{ staff.mobilenumber }}</td>
+        <td class="clickable-item col-md-1" ng-if="user.admin === true">{{ staff.salary | number:2 }}</td>
+        <td class="col-md-1" ng-if="user.admin === true">
             <md-button>
                 <md-icon type="button" class="btn" ng-click="handleClickUpdateStaff(staff._id)">
                     <span class="glyphicon glyphicon-pencil"></span></md-icon>
             </md-button>
         </td>
-        <td class="col-md-1">
+        <td class="col-md-1" ng-if="user.admin === true">
             <md-button>
                 <md-icon type="button" class="btn" ng-click="deleteStaffById(staff._id)">
                     <span class="glyphicon glyphicon-remove"></span></md-icon>

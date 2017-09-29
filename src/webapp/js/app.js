@@ -21,7 +21,7 @@ myApp.config(['$stateProvider','$urlRouterProvider',
                 url:'/',
                 templateUrl: 'partials/home.html',
                     data: {
-                requireLogin: false
+                requireLogin: true
               }
             })
             .state('courses',{

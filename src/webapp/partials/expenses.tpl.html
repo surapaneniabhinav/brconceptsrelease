@@ -1,5 +1,5 @@
 <legend>{{headline}}</legend>
-
+<div ng-if="user.admin === true">
 <div class="toolbar-button-div pull-right">
     <button type="button" class="btn btn-sm btn-primary" ng-click="handleClickAddExpense()">
         <span class="glyphicon glyphicon-plus"></span> Add Expense
@@ -110,6 +110,7 @@
         </table>
     </div>
 
+</div>
 </div>
 </div>
 

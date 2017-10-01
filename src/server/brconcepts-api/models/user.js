@@ -2,8 +2,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt-nodejs');
 
-// mongoose.connect('mongodb://localhost/brconcepts');
-
 var UserSchema = new Schema({
   username: {
         type: String,
@@ -16,17 +14,6 @@ var UserSchema = new Schema({
     },
     admin: Boolean
 });
-
-// var User = mongoose.model('User', UserSchema);
-// //
-// var user = new User({username: 'abhirocksnow@gmail.com', password: 'sudha@1989', admin: true});
-//
-// User.create(user,function(err){
-//         if(err)
-//             console.log(err);
-//         else
-//             console.log(user);
-//     });
 
 UserSchema.pre('save', function (next) {
     var user = this;

@@ -1,11 +1,14 @@
 "use strict";
 
 angular.module('myApp.studentModule',['ngTable'])
-    .controller("StudentsController",function ($scope,$rootScope,NgTableParams,$uibModal,studentManager) {
+    .controller("StudentsController",function ($scope,$rootScope,NgTableParams,$uibModal,studentManager,UsersApi) {
         $scope.headline = "Students";
         $scope.loading = false;
         $scope.studentsCount = 0;
         $scope.students = {};
+        UsersApi.getLoginInfo(function (data) {
+            $scope.user = data;
+        });
 
         $scope.loadAllStudents = function(){
             studentManager.getStudents(function (data) {

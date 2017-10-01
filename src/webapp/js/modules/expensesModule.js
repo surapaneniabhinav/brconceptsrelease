@@ -3,15 +3,16 @@
 angular.module('myApp.expensesModule',['ngTable'])
     .controller("ExpensesController",function ($scope,$rootScope,NgTableParams,$uibModal,paymentsManager,UsersApi) {
         $scope.headline = "Expenses";
+        $scope.expense = {};
 
         UsersApi.getLoginInfo(function (data) {
             $scope.user = data;
         });
 
-        $scope.dateChanged = function () {
-            if($scope.expenseDate != null) {
-                $scope.expenseDateChanged = $scope.expenseDate.toISOString();
-                paymentsManager.getExpensesByDate($scope.expenseDateChanged,function (data) {
+        $scope.expenseDateChanged = function () {
+            if($scope.expense.expDate != null) {
+                $scope.expenseDateChange = $scope.expense.expDate.toISOString();
+                paymentsManager.getExpensesByDate($scope.expenseDateChange,function (data) {
                     $scope.expensesByDate = data;
                     $scope.totalExpense = 0;
                     angular.forEach($scope.expensesByDate, function (payment) {
@@ -33,7 +34,7 @@ angular.module('myApp.expensesModule',['ngTable'])
             paymentsManager.getAllExpenses(function (data) {
                 $scope.expenses = data;
             })
-            $scope.dateChanged();
+            $scope.expenseDateChanged();
         }
 
         $scope.init();

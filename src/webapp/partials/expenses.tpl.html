@@ -18,7 +18,7 @@
         </li>
     </ul>
     <div class="tab-content" ng-show="tab==1">
-        <br/>Registration Date: <input type="date" ng-model="expenseDate" ng-change="dateChanged()"><br/><br/>
+        <br/>Registration Date: <input type="date" data-ng-model="expense.expDate" ng-change="expenseDateChanged()"><br/><br/>
 
         <table class="table table-bordered table-condensed table-hover">
             <tr><td>Total Expenses :{{expensesByDate.length}}</td> <td>Total Expense:{{totalExpense | number:2}}</td> </tr>

@@ -48,14 +48,14 @@ myApp.config(['$stateProvider','$urlRouterProvider',
                     requireLogin: true
                 }
             })
-            .state('register',{
-                url:'/register.html',
-                templateUrl: 'partials/register.tpl.html',
-                controller: 'RegisterController',
-                data: {
-                    requireLogin: false
-                }
-            })
+            // .state('register',{
+            //     url:'/register.html',
+            //     templateUrl: 'partials/register.tpl.html',
+            //     controller: 'RegisterController',
+            //     data: {
+            //         requireLogin: false
+            //     }
+            // })
             .state('staff',{
                 url:'/staff.html',
                 templateUrl: 'partials/staff.tpl.html',

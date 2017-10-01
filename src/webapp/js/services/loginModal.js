@@ -45,7 +45,6 @@ angular.module('myApp.loginModal', [])
             },
             getLoginInfo: function (callback) {
                 callback(loginInfo);
-                console.log(loginInfo);
             }
         }
 

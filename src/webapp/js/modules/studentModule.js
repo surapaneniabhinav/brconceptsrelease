@@ -129,8 +129,10 @@ angular.module('myApp.studentModule',['ngTable'])
                 $rootScope.modalInstance.close(data);
                     $rootScope.$broadcast('studentsInitComplete');
                     swal("Great", "Student has been successfully added", "success");
-                paymentsManager.addPayment(payment,function (data) {
-                })
+                    if(obj.amountpaid == true){
+                        paymentsManager.addPayment(payment,function (data) {
+                        })
+                    }
             })
 
         }

@@ -1,11 +1,10 @@
 "use strict";
 
-angular.module('myApp.studentModule',['ngTable'])
-    .controller("StudentsController",function ($scope,$rootScope,NgTableParams,$uibModal,studentManager,UsersApi) {
+angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
+    .controller("StudentsController",function ($scope,$rootScope,NgTableParams,$uibModal,$filter,studentManager,UsersApi) {
         $scope.headline = "Students";
         $scope.loading = false;
-        $scope.studentsCount = 0;
-        $scope.students = {};
+        $scope.students = [];
         UsersApi.getLoginInfo(function (data) {
             $scope.user = data;
         });
@@ -13,7 +12,15 @@ angular.module('myApp.studentModule',['ngTable'])
         $scope.loadAllStudents = function(){
             studentManager.getStudents(function (data) {
                 $scope.students = data;
-            });
+                $scope.allStudentsTableParams = new NgTableParams({
+                    count:20
+                }, {
+                    counts: [],
+                    paginationMaxBlocks: 10,
+                    paginationMinBlocks: 2,
+                    dataset: $scope.students
+                });
+            })
         };
 
         $scope.dateChanged = function () {
@@ -22,12 +29,13 @@ angular.module('myApp.studentModule',['ngTable'])
                 studentManager.getStudentsByDate($scope.registrationDate,function (data) {
                     $scope.studentsByDate = data;
                     $scope.totalIncome = 0;
+                    $scope.amountDue = 0;
                     angular.forEach($scope.studentsByDate, function (student) {
-                        if (student.amount) {
+                        if (student.amountpaid == true) {
                             $scope.totalIncome = $scope.totalIncome + student.amount;
                         }
                         else {
-                            console.log('error')
+                            $scope.amountDue = $scope.amountDue + student.amount;
                         }
                     })
                 });
@@ -146,12 +154,12 @@ angular.module('myApp.studentModule',['ngTable'])
         };
 
     })
-    .controller('updateStudentModalController', function ($scope, $rootScope, studentManager,studentID) {
+    .controller('updateStudentModalController', function ($scope, $rootScope, paymentsManager, studentManager,studentID) {
         $scope.student = {};
         studentManager.getStudentById(studentID,function (data) {
             $scope.student = data;
+            $scope.amountDue = $scope.student.amountpaid;
         });
-
         $scope.updateStudent =function(){
             if($scope.studentUpdateForm.$dirty) {
                 $scope.studentUpdateForm.submitted = true;
@@ -160,11 +168,32 @@ angular.module('myApp.studentModule',['ngTable'])
                     return;
                 }
             }
-            studentManager.updateStudent(studentID,$scope.student,function (data) {
-                $rootScope.modalInstance.close(data);
-                $rootScope.$broadcast('studentsInitComplete');
-                swal("Great", "Student has been successfully Updated", "success");
-            })
+            if($scope.amountDue == false && $scope.student.amountpaid == true ){
+                var payment = {
+                    name: $scope.student.name + " " + $scope.student.course,
+                    paymentdate: $scope.student.registrationdate,
+                    description: "joining fee",
+                    amount: $scope.student.amount,
+                    paid: $scope.student.amountpaid,
+                    pending: !$scope.student.amountpaid,
+                    type: "income",
+                    income: true,
+                    expense: false
+                }
+                studentManager.updateStudent(studentID,$scope.student,function (data) {
+                    $rootScope.modalInstance.close(data);
+                    $rootScope.$broadcast('studentsInitComplete');
+                    swal("Great", "Student has been successfully Updated", "success");
+                    paymentsManager.addPayment(payment,function (data) {
+                    })
+                })
+            }else{
+                studentManager.updateStudent(studentID,$scope.student,function (data) {
+                    $rootScope.modalInstance.close(data);
+                    $rootScope.$broadcast('studentsInitComplete');
+                    swal("Great", "Student has been successfully Updated", "success");
+                })
+            }
         };
         $scope.cancel = function () {
             $rootScope.modalInstance.dismiss('cancel');

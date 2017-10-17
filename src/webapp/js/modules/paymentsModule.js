@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('myApp.paymentsModule',[])
-    .controller("PaymentsController",function ($scope,$rootScope,$uibModal,paymentsManager,UsersApi) {
+angular.module('myApp.paymentsModule',['ngTable','ui.bootstrap'])
+    .controller("PaymentsController",function ($scope,$rootScope,$uibModal,NgTableParams,paymentsManager,UsersApi) {
         $scope.headline = "Payments";
 
         UsersApi.getLoginInfo(function (data) {
@@ -37,7 +37,15 @@ angular.module('myApp.paymentsModule',[])
         $scope.init = function () {
             paymentsManager.getPayments(function (data) {
                 $scope.payments = data;
-            })
+                $scope.allPaymentsTableParams = new NgTableParams({
+                    count:20
+                }, {
+                    counts: [],
+                    paginationMaxBlocks: 10,
+                    paginationMinBlocks: 2,
+                    dataset: $scope.payments
+                });
+            });
             $scope.dateChanged();
         }
 

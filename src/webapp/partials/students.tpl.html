@@ -23,7 +23,7 @@
     <div class="tab-content" ng-show="tab==2">
         <br> Name: <input type="text" ng-model="nameFil"><br/><br/>
 
-        <table class="table table-bordered table-condensed table-hover">
+        <table class="table table-bordered table-condensed table-hover" ng-table="allStudentsTableParams">
         <tr>
             <th>Student Name</th>
             <th>Course/Company</th>
@@ -36,7 +36,7 @@
             <th>Delete</th>
         </tr>
 
-        <tr ng-repeat="student in students |filter: nameFil ">
+        <tr ng-repeat="student in $data |filter: nameFil ">
             <td class="clickable-item col-md-2" >{{ student.name }}</td>
             <td class="clickable-item col-md-1" >{{ student.course }}</td>
             <td class="clickable-item col-md-1" >{{ student.registrationdate | date }}</td>
@@ -66,8 +66,8 @@
     <div class="tab-content" ng-show="tab==1">
         <br/>Registration Date: <input type="date" ng-model="regDate" ng-change="dateChanged()"><br/><br/>
 
-        <table class="table table-bordered table-condensed table-hover" ng-if="user.admin === true">
-            <tr><td>Total Students :{{studentsByDate.length}}</td> <td>Total Income:{{totalIncome | number:2}}</td> </tr>
+        <table class="table table-bordered table-condensed table-hover" ng-if="user.admin == true">
+            <tr><td>Total Students :{{studentsByDate.length}}</td> <td>Total Income:{{totalIncome | number:2}}</td> <td>Amount Due: {{amountDue | number:2}}</td> </tr>
         </table>
 
         <table class="table table-bordered table-condensed table-hover">

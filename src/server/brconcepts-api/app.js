@@ -15,10 +15,11 @@ var index = require('./routes/index');
 var courses = require('./routes/courses');
 var staffs = require('./routes/staffs');
 var students = require('./routes/students')
-var studentByDate = require('./routes/studentsdate')
+var studentsByDate = require('./routes/studentsdate')
 var payments = require('./routes/payments')
 var paymentsByDate = require('./routes/paymentsdate')
 var paymentsByType = require('./routes/paymentsexpenses')
+var studentsByRange = require('./routes/studentsrange')
 
 
 // Use native Node promises
@@ -64,10 +65,11 @@ app.use('/api/users', api);
 app.use('/api/courses', courses);
 app.use('/api/staffs', staffs);
 app.use('/api/students', students);
-app.use('/api/studentsByDate',studentByDate)
-app.use('/api/payments',payments)
-app.use('/api/paymentsByDate',paymentsByDate)
-app.use('/api/paymentsByType',paymentsByType)
+app.use('/api/studentsByDate',studentsByDate);
+app.use('/api/studentsByRange',studentsByRange);
+app.use('/api/payments',payments);
+app.use('/api/paymentsByDate',paymentsByDate);
+app.use('/api/paymentsByType',paymentsByType);
 
 
 

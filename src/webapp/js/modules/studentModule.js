@@ -13,7 +13,7 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
             studentManager.getStudents(function (data) {
                 $scope.students = data;
                 $scope.allStudentsTableParams = new NgTableParams({
-                    count:20
+                    count:30
                 }, {
                     counts: [],
                     paginationMaxBlocks: 10,
@@ -31,17 +31,44 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
                     $scope.totalIncome = 0;
                     $scope.amountDue = 0;
                     angular.forEach($scope.studentsByDate, function (student) {
-                        if (student.amountpaid == true) {
+                        if (student.amount != 0) {
                             $scope.totalIncome = $scope.totalIncome + student.amount;
+                            $scope.amountDue = $scope.amountDue + student.balance;
                         }
-                        else {
-                            $scope.amountDue = $scope.amountDue + student.amount;
+                        else if( student.balance != 0) {
+                            $scope.amountDue = $scope.amountDue + student.balance;
                         }
                     })
                 });
             }
             else {
                 return
+            }
+        };
+
+        $scope.getStudentsByRange = function () {
+            if($scope.startDate != null || $scope.endDate != null) {
+                $scope.startDate = $scope.startDate.toISOString();
+                $scope.endDate = $scope.endDate.toISOString();
+                studentManager.getStudentsByRange($scope.startDate,$scope.endDate,function (data) {
+                    $scope.studentsByRange = data;
+                    $scope.studentsByRange.totalIncome = 0;
+                    $scope.studentsByRange.amountDue = 0;
+                    angular.forEach($scope.studentsByRange, function (student) {
+                        if (student.amount != 0) {
+                            $scope.studentsByRange.totalIncome = $scope.studentsByRange.totalIncome + student.amount;
+                            $scope.studentsByRange.amountDue = $scope.studentsByRange.amountDue + student.balance;
+                        }
+                        else if( student.balance != 0) {
+                            $scope.studentsByRange.amountDue = $scope.studentsByRange.amountDue + student.balance;
+                        }
+                    })
+                });
+                $scope.startDate = null;
+                $scope.endDate = null;
+            }
+            else {
+                swal("Error!", "Please Check the Dates", "error");
             }
         };
 
@@ -98,8 +125,10 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
             mobilenumber: null,
             course: null,
             registrationdate: null,
+            description: null,
             email: null,
             amount: null,
+            balance: null,
             amountpaid: false,
             active: true
         };
@@ -117,8 +146,10 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
                 course: $scope.student.course,
                 mobilenumber: $scope.student.mobilenumber,
                 registrationdate: regDate.toISOString(),
+                description: $scope.student.description,
                 email: $scope.student.email,
                 amount: $scope.student.amount,
+                balance: $scope.student.balance,
                 amountpaid: $scope.student.amountpaid,
                 active: $scope.student.active
             };
@@ -159,6 +190,7 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
         studentManager.getStudentById(studentID,function (data) {
             $scope.student = data;
             $scope.amountDue = $scope.student.amountpaid;
+            $scope.balanceLeft = $scope.student.balance;
         });
         $scope.updateStudent =function(){
             if($scope.studentUpdateForm.$dirty) {
@@ -168,7 +200,7 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
                     return;
                 }
             }
-            if($scope.amountDue == false && $scope.student.amountpaid == true ){
+            if($scope.amountDue == false && $scope.balanceLeft != 0 && $scope.student.balance == 0 && $scope.student.amountpaid == true ){
                 var payment = {
                     name: $scope.student.name + " " + $scope.student.course,
                     paymentdate: $scope.student.registrationdate,
@@ -227,6 +259,14 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
             },
             getStudentsByDate: function (date,callback) {
                 $http.get('/api/studentsByDate/'+date)
+                    .then(function (response) {
+                        callback(response.data);
+                    },function (error) {
+                        $log.debug("error retrieving students");
+                    });
+            },
+            getStudentsByRange: function (startDate,endDate,callback) {
+                $http.get('/api/studentsByRange/'+startDate+'&'+endDate)
                     .then(function (response) {
                         callback(response.data);
                     },function (error) {

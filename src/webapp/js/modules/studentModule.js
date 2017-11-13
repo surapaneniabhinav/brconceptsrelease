@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
-    .controller("StudentsController",function ($scope,$rootScope,NgTableParams,$uibModal,$filter,studentManager,UsersApi) {
+    .controller("StudentsController",function ($scope,$rootScope,NgTableParams,$uibModal,$filter,studentManager,courseManager,UsersApi) {
         $scope.headline = "Students";
         $scope.loading = false;
         $scope.students = [];
@@ -9,9 +9,20 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
             $scope.user = data;
         });
 
+        courseManager.getCourses(function (data) {
+            $scope.courses = data;
+        });
+
         $scope.loadAllStudents = function(){
             studentManager.getStudents(function (data) {
                 $scope.students = data;
+                angular.forEach(data, function (student) {
+                    angular.forEach($scope.courses, function (course) {
+                        if (student.course == course._id) {
+                            student.course = course.name;
+                        }
+                    });
+                })
                 $scope.allStudentsTableParams = new NgTableParams({
                     count:30
                 }, {
@@ -31,6 +42,11 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
                     $scope.totalIncome = 0;
                     $scope.amountDue = 0;
                     angular.forEach($scope.studentsByDate, function (student) {
+                        angular.forEach($scope.courses, function (course) {
+                            if (student.course == course._id) {
+                                student.course = course.name;
+                            }
+                        });
                         if (student.amount != 0) {
                             $scope.totalIncome = $scope.totalIncome + student.amount;
                             $scope.amountDue = $scope.amountDue + student.balance;
@@ -55,6 +71,11 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
                     $scope.studentsByRange.totalIncome = 0;
                     $scope.studentsByRange.amountDue = 0;
                     angular.forEach($scope.studentsByRange, function (student) {
+                        angular.forEach($scope.courses, function (course) {
+                            if (student.course == course._id) {
+                                student.course = course.name;
+                            }
+                        });
                         if (student.amount != 0) {
                             $scope.studentsByRange.totalIncome = $scope.studentsByRange.totalIncome + student.amount;
                             $scope.studentsByRange.amountDue = $scope.studentsByRange.amountDue + student.balance;
@@ -119,7 +140,7 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
             })
         }
     })
-    .controller("addStudentModalController",function ($scope,$rootScope,paymentsManager,studentManager) {
+    .controller("addStudentModalController",function ($scope,$rootScope,paymentsManager,courseManager,studentManager,attendanceManager) {
         $scope.student = {
             name: null,
             mobilenumber: null,
@@ -132,6 +153,10 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
             amountpaid: false,
             active: true
         };
+        courseManager.getCourses(function (data) {
+            $scope.courses = data;
+        });
+
 
         $scope.addStudent = function(){
             if($scope.studentForm.$dirty) {
@@ -164,14 +189,23 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
                 income: true,
                 expense: false
             }
+            var studentAttendance = {
+                studentName: $scope.student.name,
+                course: $scope.student.course,
+                actualDays: 0,
+                presentDays: 0,
+                absentDays: 0
+            }
             studentManager.addStudent(obj,function (data) {
                 $rootScope.modalInstance.close(data);
-                    $rootScope.$broadcast('studentsInitComplete');
-                    swal("Great", "Student has been successfully added", "success");
-                    if(obj.amountpaid == true){
-                        paymentsManager.addPayment(payment,function (data) {
-                        })
-                    }
+                $rootScope.$broadcast('studentsInitComplete');
+                swal("Great", "Student has been successfully added", "success");
+                attendanceManager.addStudentAttendance(studentAttendance,function (data) {
+                })
+                if(obj.amountpaid == true){
+                    paymentsManager.addPayment(payment,function (data) {
+                    })
+                }
             })
 
         }
@@ -185,12 +219,16 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
         };
 
     })
-    .controller('updateStudentModalController', function ($scope, $rootScope, paymentsManager, studentManager,studentID) {
+    .controller('updateStudentModalController', function ($scope, $rootScope, paymentsManager, studentManager,courseManager,attendanceManager,studentID) {
         $scope.student = {};
+        $scope.courses = [];
         studentManager.getStudentById(studentID,function (data) {
             $scope.student = data;
             $scope.amountDue = $scope.student.amountpaid;
             $scope.balanceLeft = $scope.student.balance;
+        });
+        courseManager.getCourses(function (data) {
+            $scope.courses = data;
         });
         $scope.updateStudent =function(){
             if($scope.studentUpdateForm.$dirty) {
@@ -212,18 +250,36 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
                     income: true,
                     expense: false
                 }
+                var studentAttendance = {
+                    studentName: $scope.student.name,
+                    course: $scope.student.course,
+                    actualDays: 0,
+                    presentDays: 0,
+                    absentDays: 0
+                }
                 studentManager.updateStudent(studentID,$scope.student,function (data) {
                     $rootScope.modalInstance.close(data);
                     $rootScope.$broadcast('studentsInitComplete');
                     swal("Great", "Student has been successfully Updated", "success");
                     paymentsManager.addPayment(payment,function (data) {
                     })
+                    attendanceManager.addStudentAttendance(studentAttendance,function (data) {
+                    })
                 })
             }else{
+                var studentAttendance = {
+                    studentName: $scope.student.name,
+                    course: $scope.student.course,
+                    actualDays: 0,
+                    presentDays: 0,
+                    absentDays: 0
+                }
                 studentManager.updateStudent(studentID,$scope.student,function (data) {
                     $rootScope.modalInstance.close(data);
                     $rootScope.$broadcast('studentsInitComplete');
                     swal("Great", "Student has been successfully Updated", "success");
+                    attendanceManager.addStudentAttendance(studentAttendance,function (data) {
+                    })
                 })
             }
         };
@@ -271,6 +327,14 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
                         callback(response.data);
                     },function (error) {
                         $log.debug("error retrieving students");
+                    });
+            },
+            getStudentsByCourse: function (courseId,callback) {
+                $http.get('/api/students/studentsByCourse/'+courseId)
+                    .then(function (response) {
+                        callback(response.data);
+                    },function (error) {
+                        $log.debug("error retrieving student");
                     });
             },
             addStudent: function (student,callback) {

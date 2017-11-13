@@ -20,7 +20,7 @@
         </li>
     </ul>
 
-    <div class="tab-content" ng-show="tab==2">
+    <div class="tab-content table-responsive" ng-show="tab==2">
         <br> Name: <input type="text" ng-model="nameFil"><br/><br/>
 
         <table class="table table-bordered table-condensed table-hover" ng-table="allStudentsTableParams">
@@ -67,7 +67,7 @@
         </table>
     </div>
 
-    <div class="tab-content" ng-show="tab==1">
+    <div class="tab-content table-responsive" ng-show="tab==1">
         <br/>Registration Date: <input type="date" ng-model="regDate" ng-change="dateChanged()"><br/><br/>
 
         <table class="table table-bordered table-condensed table-hover" ng-if="user.admin == true">
@@ -119,7 +119,7 @@
 
     </div>
 
-    <div class="tab-content" ng-show="tab==3">
+    <div class="tab-content table-responsive" ng-show="tab==3">
         <br/><div><div class="clickable-item col-md-4">Start Date: <input type="date" ng-model="startDate"></div>
         <div class="clickable-item col-md-4">End Date: <input type="date" ng-model="endDate"></div>
         <div class="clickable-item col-md-4"><button class="btn btn-primary" ng-click="getStudentsByRange()">Get Students</button></div></div><br/><br/><br/>
@@ -192,7 +192,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label">Course/Company <span class="data-required">*</span>:</label>
                 <div class="col-sm-6">
-                    <input type="text" id="studentCourse" class="form-control" ng-model="student.course" placeholder="Course / Company Name" required>
+                    <select id="studentCourse" ng-options="course._id as course.name for course in courses" class="form-control" ng-model="student.course" required></select>
                 </div>
             </div>
 
@@ -282,7 +282,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label">Course/Company <span class="data-required">*</span>:</label>
                 <div class="col-sm-6">
-                    <input type="text" id="studentCourseUpdate" class="form-control" ng-model="student.course" placeholder="Course/Company Name" required>
+                    <select id="studentCourseUpdate" ng-options="course._id as course.name for course in courses" class="form-control" ng-model="student.course" required></select>
                 </div>
             </div>
 

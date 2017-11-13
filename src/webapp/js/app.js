@@ -11,7 +11,8 @@ var myApp = angular.module('myApp',[
     'myApp.staffModule',
     'myApp.registerModule',
     'myApp.paymentsModule',
-    'myApp.expensesModule'
+    'myApp.expensesModule',
+    'myApp.studentsAttendanceModule'
 ])
 
 myApp.config(['$stateProvider','$urlRouterProvider',
@@ -24,8 +25,8 @@ myApp.config(['$stateProvider','$urlRouterProvider',
                 requireLogin: true
               }
             })
-            .state('courses',{
-                url:'/courses.html',
+            .state('batches',{
+                url:'/batches.html',
                 templateUrl: 'partials/courses.tpl.html',
                 controller: 'CourseController',
                 data: {
@@ -68,6 +69,14 @@ myApp.config(['$stateProvider','$urlRouterProvider',
                 url:'/students.html',
                 templateUrl: 'partials/students.tpl.html',
                 controller: 'StudentsController',
+                data: {
+                    requireLogin: true
+                }
+            })
+            .state('studentsattendance',{
+                url:'/studentsattendance.html',
+                templateUrl: 'partials/studentsAttendance.tpl.html',
+                controller: 'StudentsAttendanceController',
                 data: {
                     requireLogin: true
                 }

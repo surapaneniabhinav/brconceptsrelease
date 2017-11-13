@@ -1,8 +1,10 @@
 var mongoose = require('mongoose');
+var ObjectId = mongoose.Schema.Types.ObjectId;
+
 
 var StudentSchema = new mongoose.Schema({
     name: String,
-    course: String,
+    course: { type: ObjectId, ref: 'courses' },
     registrationdate: Date,
     mobilenumber: Number,
     email: String,

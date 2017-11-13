@@ -5,7 +5,6 @@
         </button>
     </div>
     <br/>
-    <br/>
 
 <div class="bpdp-tab" ng-init="tab=1">
     <ul>
@@ -20,7 +19,7 @@
         </li>
     </ul>
 
-    <div class="tab-content table-responsive" ng-show="tab==2">
+    <div style="height: 350px; overflow: auto;" class="tab-content table-responsive" ng-show="tab==2">
         <br> Name: <input type="text" ng-model="nameFil"><br/><br/>
 
         <table class="table table-bordered table-condensed table-hover" ng-table="allStudentsTableParams">
@@ -67,7 +66,7 @@
         </table>
     </div>
 
-    <div class="tab-content table-responsive" ng-show="tab==1">
+    <div style="height: 350px; overflow: auto;" class="tab-content table-responsive" ng-show="tab==1">
         <br/>Registration Date: <input type="date" ng-model="regDate" ng-change="dateChanged()"><br/><br/>
 
         <table class="table table-bordered table-condensed table-hover" ng-if="user.admin == true">
@@ -119,7 +118,7 @@
 
     </div>
 
-    <div class="tab-content table-responsive" ng-show="tab==3">
+    <div style="height: 350px; overflow: auto;" class="tab-content table-responsive" ng-show="tab==3">
         <br/><div><div class="clickable-item col-md-4">Start Date: <input type="date" ng-model="startDate"></div>
         <div class="clickable-item col-md-4">End Date: <input type="date" ng-model="endDate"></div>
         <div class="clickable-item col-md-4"><button class="btn btn-primary" ng-click="getStudentsByRange()">Get Students</button></div></div><br/><br/><br/>

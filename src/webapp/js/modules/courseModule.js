@@ -2,7 +2,7 @@
 
 angular.module('myApp.courseModule',[])
     .controller("CourseController",function ($scope,$rootScope,$uibModal,courseManager) {
-        $scope.headline = "Courses";
+        $scope.headline = "Batches";
         $scope.loading = false;
         $scope.coursesCount = 0;
         $scope.courses = {};

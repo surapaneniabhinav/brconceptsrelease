@@ -1,0 +1,98 @@
+<legend>{{headline}}</legend>
+
+<br/>
+<div class="form-group">
+    <label class="col-sm-1 control-label">Course:</label>
+    <div class="col-sm-3">
+        <select id="studentCourse" ng-options="course._id as course.name for course in courses" class="form-control" ng-model="course" required></select>
+    </div>
+    <div class="col-sm-3">
+        <button class="btn btn-primary" ng-click="getStudentsByCourse()">Get Students</button>
+    </div>
+</div><br/><br/><br/>
+<table class="table table-bordered table-condensed table-hover">
+    <tr>
+        <th>Course</th>
+        <th>Student Name</th>
+        <th>Total Classes</th>
+        <th>Days Present</th>
+        <th>Days Absent</th>
+        <th>Edit</th>
+    </tr>
+
+    <tr ng-repeat="student in students">
+        <td class="clickable-item col-md-2" >{{ student.course }}</td>
+        <td class="clickable-item col-md-2" >{{ student.studentName }}</td>
+        <td class="clickable-item col-md-2" >{{ student.actualDays }}</td>
+        <td class="clickable-item col-md-2" >{{ student.presentDays }}</td>
+        <td class="clickable-item col-md-2" >{{ student.absentDays }}</td>
+        <td class="col-md-1">
+            <md-button>
+                <md-icon type="button" class="btn" ng-click="handleClickUpdateStudentAttendance(student._id)">
+                    <span class="glyphicon glyphicon-pencil"></span></md-icon>
+            </md-button>
+        </td>
+    </tr>
+    <tr ng-if="!students || students.length === 0">
+        <td colspan="6">No students exist.  Please add some.</td>
+    </tr>
+</table>
+
+<script type="text/ng-template" id="update-student-attendance-modal.html">
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-sm-11">
+                <h3 class="modal-title">Update Student Attendance</h3>
+            </div>
+            <div class="col-sm-1">
+                <md-button>
+                    <md-icon type="button" class="btn-sm" ng-click="cancel()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </md-icon>
+                </md-button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <form name="studentAttendanceUpdateForm" class="form-horizontal" role="form" autocomplete="off" unsaved-warning-form>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Student Name <span class="data-required">*</span> :</label>
+                <div class="col-sm-6">
+                    <input type="text" id="studentNameUpdate" class="form-control" ng-model="student.studentName" placeholder="student Name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Course <span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <select id="studentCourseUpdate" ng-options="course._id as course.name for course in courses" class="form-control" ng-model="student.course" required></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Actual Days<span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="number" id="studentActualDaysUpdate" class="form-control" ng-model="student.actualDays" placeholder="Total Classes" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Present Days<span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="number" id="studentPresentDaysUpdate" class="form-control" ng-model="student.presentDays" placeholder="Present Days" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Absent Days<span class="data-required">*</span>:</label>
+                <div class="col-sm-6">
+                    <input type="number" id="studentAbsentDaysUpdate" class="form-control" ng-model="student.absentDays" placeholder="Absent Days" required>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="updateStudentAttendance()" ng-disabled="!isInputValid()">Update</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>

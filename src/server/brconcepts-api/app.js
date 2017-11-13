@@ -20,6 +20,7 @@ var payments = require('./routes/payments')
 var paymentsByDate = require('./routes/paymentsdate')
 var paymentsByType = require('./routes/paymentsexpenses')
 var studentsByRange = require('./routes/studentsrange')
+var attendance = require('./routes/attendance')
 
 
 // Use native Node promises
@@ -28,11 +29,6 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/brconcepts')
     .then(() =>  console.log('connection successful'))
     .catch((err) => console.error(err));
-
-// view engine setup
-// app.engine('html', cons.swig)
-// app.set('views', path.join(__dirname,'..','..', 'index.html'));
-// app.set('view engine', 'html');
 
 
 // uncomment after placing your favicon in /public
@@ -70,6 +66,7 @@ app.use('/api/studentsByRange',studentsByRange);
 app.use('/api/payments',payments);
 app.use('/api/paymentsByDate',paymentsByDate);
 app.use('/api/paymentsByType',paymentsByType);
+app.use('/api/attendance',attendance);
 
 
 

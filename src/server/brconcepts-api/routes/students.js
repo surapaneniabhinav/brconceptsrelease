@@ -11,14 +11,18 @@ router.get('/', function(req, res, next) {
     })
 });
 
-/* GET /students/id */
 router.get('/:id', function(req, res, next) {
     Student.findById(req.params.id, function (err, post) {
         if (err) return next(err);
         res.json(post);
     });
 });
-
+router.get('/studentsByCourse/:courseId', function(req, res, next) {
+    Student.find({course: req.params.courseId}, function (err, post) {
+        if (err) return next(err);
+        res.json(post);
+    });
+});
 router.post('/', function(req, res, next) {
     Student.create(req.body, function (err, post) {
         if (err) return next(err);
@@ -26,7 +30,6 @@ router.post('/', function(req, res, next) {
     });
 });
 
-/* PUT /students/:id */
 router.put('/:id', function(req, res, next) {
     Student.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
         if (err) return next(err);
@@ -34,7 +37,6 @@ router.put('/:id', function(req, res, next) {
     });
 });
 
-/* DELETE /staff/:id */
 router.delete('/:id', function(req, res, next) {
     Student.findByIdAndRemove(req.params.id, req.body, function (err, post) {
         if (err) return next(err);

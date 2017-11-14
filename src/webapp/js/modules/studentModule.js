@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
-    .controller("StudentsController",function ($scope,$rootScope,NgTableParams,$uibModal,$filter,studentManager,courseManager,UsersApi) {
+    .controller("StudentsController",function ($scope,$rootScope,NgTableParams,$uibModal,$filter,studentManager,courseManager,printManager,UsersApi) {
         $scope.headline = "Students";
         $scope.loading = false;
         $scope.students = [];
@@ -12,6 +12,10 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
         courseManager.getCourses(function (data) {
             $scope.courses = data;
         });
+
+        $scope.print = function(eleId) {
+            printManager.print(eleId);
+        }
 
         $scope.loadAllStudents = function(){
             studentManager.getStudents(function (data) {
@@ -363,3 +367,31 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
             }
         }
     })
+    .factory('printManager', function () {
+        return {
+            print: function (eleId) {
+                var mywindow = window.open('', 'PRINT', 'height=600,width=1000');
+                mywindow.document.write('<html><head><title>' + document.title  + '</title> <style>table{border: 1px}</style>');
+                mywindow.document.write('</head><body >');
+                mywindow.document.write('<h1>' + document.title  + '</h1>');
+                var divToPrint = document.getElementById(eleId);
+                var htmlToPrint = '' +
+                    '<style type="text/css">' +
+                    'table th, table td {' +
+                    'border:1px solid #000;' +
+                    'padding;0.5em;' +
+                    '}' +
+                    '</style>';
+                htmlToPrint += divToPrint.outerHTML;
+                mywindow.document.write(htmlToPrint);
+                mywindow.document.write('</body></html>');
+
+                mywindow.document.close(); // necessary for IE >= 10
+                mywindow.focus(); // necessary for IE >= 10*/
+
+                mywindow.print();
+                mywindow.close();
+                return true;
+            }
+        }
+    });

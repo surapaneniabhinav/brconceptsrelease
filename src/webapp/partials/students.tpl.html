@@ -118,43 +118,79 @@
 
     </div>
 
-    <div style="height: 350px; overflow: auto;" class="tab-content table-responsive" ng-show="tab==3">
+    <div class="tab-content table-responsive" ng-show="tab==3">
         <br/><div><div class="clickable-item col-md-4">Start Date: <input type="date" ng-model="startDate"></div>
         <div class="clickable-item col-md-4">End Date: <input type="date" ng-model="endDate"></div>
-        <div class="clickable-item col-md-4"><button class="btn btn-primary" ng-click="getStudentsByRange()">Get Students</button></div></div><br/><br/><br/>
+        <div class="clickable-item col-md-2"><button class="btn btn-primary" ng-click="getStudentsByRange()">Get Students</button></div>
+        <div class="clickable-item col-md-2"><button class="btn btn-primary" ng-click="print('studentsByRange')">Print</button></div></div><br/><br/><br/>
+    <table class="table table-bordered table-condensed table-hover" ng-if="user.admin == true">
+        <tr><td>Total Students :{{studentsByRange.length}}</td> <td>Total Income:{{studentsByRange.totalIncome | number:2}}</td> <td>Amount Due: {{studentsByRange.amountDue | number:2}}</td> </tr>
+    </table>
 
-        <table class="table table-bordered table-condensed table-hover" ng-if="user.admin == true">
-            <tr><td>Total Students :{{studentsByRange.length}}</td> <td>Total Income:{{studentsByRange.totalIncome | number:2}}</td> <td>Amount Due: {{studentsByRange.amountDue | number:2}}</td> </tr>
-        </table>
+    <table class="table table-bordered table-condensed table-hover">
+        <tr>
+            <th>Student Name</th>
+            <th>Course/Company</th>
+            <th>Registration Date</th>
+            <th>Email Id</th>
+            <th>Mobile Number</th>
+            <th>Description</th>
+            <th>Amount Paid</th>
+            <th>Balance</th>
+            <th>Total Amount</th>
+        </tr>
 
-        <table class="table table-bordered table-condensed table-hover">
-            <tr>
-                <th>Student Name</th>
-                <th>Course/Company</th>
-                <th>Registration Date</th>
-                <th>Email Id</th>
-                <th>Mobile Number</th>
-                <th>Description</th>
-                <th>Amount Paid</th>
-                <th>Balance</th>
-                <th>Total Amount</th>
-            </tr>
+        <tr ng-repeat="student in studentsByRange">
+            <td class="clickable-item col-md-2" >{{ student.name }}</td>
+            <td class="clickable-item col-md-1" >{{ student.course }}</td>
+            <td class="clickable-item col-md-1" >{{ student.registrationdate | date }}</td>
+            <td class="clickable-item col-md-2" >{{ student.email }}</td>
+            <td class="clickable-item col-md-1" >{{ student.mobilenumber }}</td>
+            <td class="clickable-item col-md-2" >{{ student.description}}</td>
+            <td class="clickable-item col-md-1" >{{ student.amount | number:2}}</td>
+            <td class="clickable-item col-md-1" >{{ student.balance | number:2}}</td>
+            <td class="clickable-item col-md-1"><span ng-if="student.amountpaid === false ">Not Paid</span><span ng-if="student.amountpaid === true ">Paid</span></td>
+        </tr>
+        <tr ng-if="!studentsByRange || studentsByRange.length === 0">
+            <td colspan="11">No students exist.  Please add some.</td>
+        </tr>
+    </table>
+    <span style="display: none">
+        <div id="studentsByRange">
+            <table class="table table-bordered table-condensed table-hover" ng-if="user.admin == true">
+                <tr><td>Total Students :{{studentsByRange.length}}</td> <td>Total Income:{{studentsByRange.totalIncome | number:2}}</td> <td>Amount Due: {{studentsByRange.amountDue | number:2}}</td> </tr>
+            </table>
 
-            <tr ng-repeat="student in studentsByRange">
-                <td class="clickable-item col-md-2" >{{ student.name }}</td>
-                <td class="clickable-item col-md-1" >{{ student.course }}</td>
-                <td class="clickable-item col-md-1" >{{ student.registrationdate | date }}</td>
-                <td class="clickable-item col-md-2" >{{ student.email }}</td>
-                <td class="clickable-item col-md-1" >{{ student.mobilenumber }}</td>
-                <td class="clickable-item col-md-2" >{{ student.description}}</td>
-                <td class="clickable-item col-md-1" >{{ student.amount | number:2}}</td>
-                <td class="clickable-item col-md-1" >{{ student.balance | number:2}}</td>
-                <td class="clickable-item col-md-1"><span ng-if="student.amountpaid === false ">Not Paid</span><span ng-if="student.amountpaid === true ">Paid</span></td>
-            </tr>
-            <tr ng-if="!studentsByRange || studentsByRange.length === 0">
-                <td colspan="11">No students exist.  Please add some.</td>
-            </tr>
-        </table>
+            <table class="table table-bordered table-condensed table-hover">
+                <tr>
+                    <th>Student Name</th>
+                    <th>Course/Company</th>
+                    <th>Registration Date</th>
+                    <th>Email Id</th>
+                    <th>Mobile Number</th>
+                    <th>Description</th>
+                    <th>Amount Paid</th>
+                    <th>Balance</th>
+                    <th>Total Amount</th>
+                </tr>
+
+                <tr ng-repeat="student in studentsByRange">
+                    <td class="clickable-item col-md-2" >{{ student.name }}</td>
+                    <td class="clickable-item col-md-1" >{{ student.course }}</td>
+                    <td class="clickable-item col-md-1" >{{ student.registrationdate | date }}</td>
+                    <td class="clickable-item col-md-2" >{{ student.email }}</td>
+                    <td class="clickable-item col-md-1" >{{ student.mobilenumber }}</td>
+                    <td class="clickable-item col-md-2" >{{ student.description}}</td>
+                    <td class="clickable-item col-md-1" >{{ student.amount | number:2}}</td>
+                    <td class="clickable-item col-md-1" >{{ student.balance | number:2}}</td>
+                    <td class="clickable-item col-md-1"><span ng-if="student.amountpaid === false ">Not Paid</span><span ng-if="student.amountpaid === true ">Paid</span></td>
+                </tr>
+                <tr ng-if="!studentsByRange || studentsByRange.length === 0">
+                    <td colspan="11">No students exist.  Please add some.</td>
+                </tr>
+            </table>
+        </div>
+    </span>
 
     </div>
 

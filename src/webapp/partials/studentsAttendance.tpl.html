@@ -64,10 +64,10 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" >
                 <label class="col-sm-4 control-label">Course <span class="data-required">*</span>:</label>
                 <div class="col-sm-6">
-                    <select id="studentCourseUpdate" ng-options="course._id as course.name for course in courses" class="form-control" ng-model="student.course" required></select>
+                    <select ng-disabled="true" id="studentCourseUpdate" ng-options="course._id as course.name for course in courses" class="form-control" ng-model="student.course" required></select>
                 </div>
             </div>
 

@@ -16,6 +16,16 @@ angular.module('myApp.studentsAttendanceModule',['ngTable','ui.bootstrap'])
         $scope.getStudentsByCourse = function () {
             attendanceManager.getStudentsAttendance($scope.course,function (data) {
                 $scope.students = data;
+                angular.forEach($scope.students, function (student) {
+                    console.log(student)
+                    console.log($scope.courses)
+                      angular.forEach($scope.courses,function (course) {
+                          console.log(course._id)
+                          if(student.course == course._id){
+                              student.course = course.name;
+                          }
+                      })
+                })
             })
         }
         $scope.$on('studentsAttendanceInitComplete', function (e, value) {

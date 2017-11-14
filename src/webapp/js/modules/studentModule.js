@@ -53,9 +53,11 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
                         });
                         if (student.amount != 0) {
                             $scope.totalIncome = $scope.totalIncome + student.amount;
-                            $scope.amountDue = $scope.amountDue + student.balance;
+                            if(student.balance != 0 && student.amountPaid == "false"){
+                                $scope.amountDue = $scope.amountDue + student.balance;
+                            }
                         }
-                        else if( student.balance != 0) {
+                        else if( student.balance != 0 && student.amountPaid == "false") {
                             $scope.amountDue = $scope.amountDue + student.balance;
                         }
                     })
@@ -82,9 +84,11 @@ angular.module('myApp.studentModule',['ngTable','ui.bootstrap'])
                         });
                         if (student.amount != 0) {
                             $scope.studentsByRange.totalIncome = $scope.studentsByRange.totalIncome + student.amount;
-                            $scope.studentsByRange.amountDue = $scope.studentsByRange.amountDue + student.balance;
+                            if( student.balance != 0 && student.amountpaid == false ){
+                                $scope.studentsByRange.amountDue = $scope.studentsByRange.amountDue + student.balance;
+                            }
                         }
-                        else if( student.balance != 0) {
+                        else if(  student.balance != 0 && student.amountpaid == false) {
                             $scope.studentsByRange.amountDue = $scope.studentsByRange.amountDue + student.balance;
                         }
                     })

@@ -24,7 +24,9 @@ angular.module('myApp.loginModal', [])
             var instance = $uibModal.open({
                 templateUrl: 'partials/loginModalTemplate.html',
                 controller: 'LoginModalCtrl',
-                controllerAs: 'LoginModalCtrl'
+                controllerAs: 'LoginModalCtrl',
+                backdrop  : 'static',
+                keyboard  : false
             })
 
             return instance.result.then(assignCurrentUser);

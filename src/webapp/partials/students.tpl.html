@@ -19,7 +19,7 @@
         </li>
     </ul>
 
-    <div style="height: 350px; overflow: auto;" class="tab-content table-responsive" ng-show="tab==2">
+    <div style="height: 400px; overflow: auto;" class="tab-content table-responsive" ng-show="tab==2">
         <br> Name: <input type="text" ng-model="nameFil"><br/><br/>
 
         <table class="table table-bordered table-condensed table-hover" ng-table="allStudentsTableParams">
@@ -66,7 +66,7 @@
         </table>
     </div>
 
-    <div style="height: 350px; overflow: auto;" class="tab-content table-responsive" ng-show="tab==1">
+    <div style="height: 400px; overflow: auto;" class="tab-content table-responsive" ng-show="tab==1">
         <br/>Registration Date: <input type="date" ng-model="regDate" ng-change="dateChanged()"><br/><br/>
 
         <table class="table table-bordered table-condensed table-hover" ng-if="user.admin == true">

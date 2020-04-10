@@ -21,7 +21,7 @@
     "gulp": "^3.9.1",
     "jquery": "^3.2.1",
     "mongodb": "^2.2.31",
-    "mongoose": "^4.11.12",
+    "mongoose": "^5.9.7",
     "ng-table": "^3.0.1",
     "sweetalert": "^1.1.3"
   },
